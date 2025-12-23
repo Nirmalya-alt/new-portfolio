@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfolio</title>
+    <script>
+      // Shim process.env for browser compatibility in environments without a bundler
+      window.process = { env: { API_KEY: "" } };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -20,6 +24,16 @@
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
             },
+            keyframes: {
+              shake: {
+                '0%, 100%': { transform: 'translateX(0)' },
+                '25%': { transform: 'translateX(-4px)' },
+                '75%': { transform: 'translateX(4px)' },
+              }
+            },
+            animation: {
+              shake: 'shake 0.2s ease-in-out 0s 2',
+            }
           },
         },
       }

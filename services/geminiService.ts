@@ -2,22 +2,23 @@ import { GoogleGenAI } from "@google/genai";
 import { PORTFOLIO_DATA } from "../constants";
 
 export const sendMessageToGemini = async (message: string): Promise<string> => {
-  // Create instance right before call to ensure up-to-date API key in deployment
+  // Always initialize with the environment variable provided in the context
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
   
   const systemInstruction = `
-    You are an AI assistant for the personal portfolio website of ${PORTFOLIO_DATA.name}.
-    Answer questions about ${PORTFOLIO_DATA.name}'s background, skills, and projects concisely.
-    Context:
+    You are an AI assistant for ${PORTFOLIO_DATA.name}'s portfolio. 
+    Answer professionally about their background, skills, and projects concisely.
+    
+    About ${PORTFOLIO_DATA.name}:
     - Role: ${PORTFOLIO_DATA.title}
     - About: ${PORTFOLIO_DATA.about}
     - Experience: ${PORTFOLIO_DATA.experience.map(e => e.role).join(', ')}
-    - Projects: ${PORTFOLIO_DATA.projects.map(p => p.title).join(', ')}
+    - Notable Projects: ${PORTFOLIO_DATA.projects.map(p => p.title).join(', ')}
     
-    Rules:
-    1. Answer in first person.
-    2. Max 50 words.
-    3. Be friendly and professional.
+    Instructions:
+    1. Speak in first person.
+    2. Keep responses brief (under 50 words).
+    3. Be encouraging and helpful.
   `;
 
   try {
@@ -30,10 +31,9 @@ export const sendMessageToGemini = async (message: string): Promise<string> => {
       },
     });
 
-    // Access .text as a property per latest guidelines
     return response.text || "I'm sorry, I couldn't generate a response.";
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "I'm having a bit of trouble connecting right now. Please try again in a moment!";
+    return "I'm having a little trouble thinking right now. Please try again in a few seconds!";
   }
 };
